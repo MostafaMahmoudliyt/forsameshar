@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>فرصة مشوار</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --primary:#0f172a;
+  --secondary:#1e293b;
+  --accent:#2563eb;
+  --light:#f8fafc;
+  --border:#e2e8f0;
+  --success:#16a34a;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:'Cairo',sans-serif;
+  background:var(--light);
+  color:var(--primary);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+}
+
+.container{
+  width:100%;
+  max-width:480px;
+  padding:24px;
+}
+
+.brand{
+  text-align:center;
+  font-size:24px;
+  font-weight:700;
+  margin-bottom:24px;
+}
+
+.card{
+  background:white;
+  padding:28px 22px;
+  border-radius:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,.05);
+  position:relative;
+  overflow:hidden;
+}
+
+.progress{
+  height:6px;
+  background:var(--border);
+  border-radius:10px;
+  margin-bottom:24px;
+  overflow:hidden;
+}
+
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--accent),#1d4ed8);
+  transition:width .4s ease;
+}
+
+.question{
+  font-size:20px;
+  font-weight:700;
+  margin-bottom:8px;
+}
+
+.reason{
+  font-size:14px;
+  color:#64748b;
+  margin-bottom:20px;
+}
+
+.options{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.option-btn{
+  background:white;
+  border:1px solid var(--border);
+  padding:14px;
+  border-radius:16px;
+  font-size:15px;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.option-btn:hover{
+  border-color:var(--accent);
+  transform:translateY(-2px);
+}
+
+.option-btn:active{
+  transform:scale(.97);
+}
+
+input,textarea{
+  width:100%;
+  padding:12px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  margin-top:10px;
+  font-family:'Cairo';
+}
+
+.fade{
+  animation:fade .3s ease;
+}
+
+@keyframes fade{
+  from{opacity:0; transform:translateX(-10px);}
+  to{opacity:1; transform:translateX(0);}
+}
+
+/* FAQ */
+.faq-item{
+  border-bottom:1px solid var(--border);
+}
+
+.faq-question{
+  padding:16px 0;
+  cursor:pointer;
+  font-weight:600;
+}
+
+.faq-answer{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .3s ease;
+  font-size:14px;
+  color:#475569;
+  padding-left:6px;
+}
+
+.faq-item.active .faq-answer{
+  max-height:300px;
+  margin-bottom:10px;
+}
+
+.cta{
+  margin-top:18px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.cta button{
+  padding:14px;
+  border-radius:16px;
+  border:none;
+  font-size:15px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.primary-btn{
+  background:var(--accent);
+  color:white;
+}
+
+.secondary-btn{
+  background:white;
+  border:1px solid var(--border);
+}
+
+.primary-btn:hover{
+  background:#1d4ed8;
+}
+
+.secondary-btn:hover{
+  border-color:var(--accent);
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<div class="brand">فرصة مشوار</div>
+<div class="card fade" id="app"></div>
+</div>
+
+<script>
+const WHATSAPP_NUMBER = "201023852556";
+
+let currentStep = 0;
+let answers = {};
+
+const steps = [
+{
+question:"كم عمرك؟",
+reason:"العمر يؤثر على قبول التأشيرة ونوع العمل",
+options:["أقل من 21","21–45","أكثر من 55"],
+key:"age"
+},
+{
+question:"هل لديك خبرة عمل؟",
+reason:"تحديد الوظائف المناسبة",
+options:["نعم خبرة قوية","لا يوجد خبرة"],
+key:"experience"
+},
+{
+question:"هل معك جواز سفر ساري؟",
+reason:"معرفة إمكانية السفر بسرعة",
+options:["نعم ساري","لا يوجد"],
+key:"passport"
+},
+{
+question:"حالتك الصحية؟",
+reason:"بعض الوظائف تحتاج صحة جيدة",
+options:["ممتازة","جيدة مع مشكلة بسيطة"],
+key:"health"
+},
+{
+question:"متوسط الراتب المتوقع؟",
+reason:"توجيه العامل حسب توقعاته",
+options:["أي راتب مناسب","25 ألف جنيه","35 ألف جنيه","45 ألف جنيه"],
+key:"salary"
+}
+];
+
+function renderStep(){
+const app=document.getElementById("app");
+app.innerHTML="";
+app.classList.add("fade");
+
+if(currentStep<steps.length){
+const step=steps[currentStep];
+
+let html=`
+<div class="progress">
+<div class="progress-bar" style="width:${((currentStep)/steps.length)*100}%"></div>
+</div>
+<div class="question">${step.question}</div>
+<div class="reason">${step.reason}</div>
+<div class="options">
+`;
+
+step.options.forEach(opt=>{
+html+=`<button class="option-btn" onclick="selectOption('${opt}')">${opt}</button>`;
+});
+
+html+="</div>";
+app.innerHTML=html;
+
+} else {
+renderFinal();
+}
+}
+
+function selectOption(value){
+const step=steps[currentStep];
+answers[step.key]=value;
+
+if(step.key==="experience"){
+if(value==="نعم خبرة قوية"){
+document.querySelector(".options").innerHTML+=`
+<textarea id="expDetails" placeholder="اكتب تفاصيل خبرتك"></textarea>
+<button class="option-btn" onclick="saveExperience()">متابعة</button>`;
+return;
+}
+if(value==="لا يوجد خبرة"){
+document.querySelector(".options").innerHTML=`
+<button class="option-btn" onclick="chooseJob('مطاعم و محلات')">مطاعم و محلات</button>
+<button class="option-btn" onclick="chooseJob('مصانع ومعمار')">مصانع ومعمار</button>
+<button class="option-btn" onclick="chooseJob('سباكين وكهربائيين')">سباكين وكهربائيين</button>
+<button class="option-btn" onclick="chooseJob('أمن وحراسة')">أمن وحراسة</button>`;
+return;
+}
+}
+
+if(step.key==="passport" && value==="لا يوجد"){
+document.querySelector(".options").innerHTML+=`
+<button class="option-btn" onclick="choosePassport()">استخراج جواز خلال أسبوع</button>`;
+return;
+}
+
+nextStep();
+}
+
+function saveExperience(){
+answers.expDetails=document.getElementById("expDetails").value;
+nextStep();
+}
+
+function chooseJob(job){
+answers.jobType=job;
+nextStep();
+}
+
+function choosePassport(){
+answers.passport="لا يوجد - استخراج خلال أسبوع";
+nextStep();
+}
+
+function nextStep(){
+currentStep++;
+renderStep();
+}
+
+function renderFinal(){
+const app=document.getElementById("app");
+
+app.innerHTML=`
+<div class="question">تواصل معنا عبر واتساب</div>
+
+<div style="margin-top:20px">
+<input id="inquiry" placeholder="ادخل استفسارك (اختياري)">
+</div>
+
+<div style="margin-top:20px;font-weight:700">❓ الأسئلة الشائعة</div>
+
+<div class="faq">
+${faqItem("من يوفر الشغل؟","نحن نوفره بأنفسنا.")}
+${faqItem("متوسط الرواتب؟","بين 500 و900 دولار.")}
+${faqItem("الأكل والسكن؟","أحيانًا توفر الشركة أحدهما أو الاثنين.")}
+${faqItem("ساعات العمل؟","من 8 إلى 10 ساعات.")}
+${faqItem("التكلفة تشمل:","التأشيرة، تذاكر الطيران، استقبال مطار، سكن أسبوع مجاني، توفير وظيفة، سكن دائم قريب من العمل.")}
+${faqItem("الأوراق المطلوبة:","جواز سفر ساري، صور شخصية.")}
+${faqItem("طريقة الدفع:","يوجد خياران للدفع: مقدم حجز، أو من خلال شركة ضمان حتى الوصول. لا يتوفر نظام الدفع نصف الآن ونصف بعد العمل.")}
+${faqItem("اللغة:","ليست مطلوبة.")}
+${faqItem("موقع الشركة:","اسطنبول وكفر الشيخ.")}
+${faqItem("هل السفر مضمون؟","نعم بضمان.")}
+${faqItem("هل يمكن تغيير الوظيفة؟","نعم حسب الاتفاق.")}
+${faqItem("وقت الوصول للعمل:","حوالي 3 إلى 4 أسابيع بعد اكتمال الأوراق.")}
+</div>
+
+<div style="margin-top:20px;font-weight:700">هل فهمت جميع التفاصيل؟</div>
+
+<div class="cta">
+<button class="primary-btn" onclick="sendWhatsApp()">نعم فهمت</button>
+<button class="secondary-btn" onclick="directWhatsApp()">أريد الاستفسار أكثر</button>
+</div>
+`;
+
+document.querySelectorAll(".faq-question").forEach(item=>{
+item.addEventListener("click",function(){
+this.parentElement.classList.toggle("active");
+});
+});
+}
+
+function faqItem(q,a){
+return `<div class="faq-item">
+<div class="faq-question">${q}</div>
+<div class="faq-answer">${a}</div>
+</div>`;
+}
+
+function buildMessage(){
+let msg="أهلاً 👋\n\nأنا مهتم بفرصة العمل بالخارج، وهذه بياناتي:\n\n";
+
+msg+=`العمر: ${answers.age}\n`;
+msg+=`الخبرة: ${answers.experience}\n`;
+
+if(answers.expDetails){
+msg+=`تفاصيل الخبرة: ${answers.expDetails}\n`;
+}
+
+if(answers.jobType){
+msg+=`مجال العمل المطلوب: ${answers.jobType}\n`;
+}
+
+msg+=`جواز السفر: ${answers.passport}\n`;
+msg+=`الحالة الصحية: ${answers.health}\n`;
+msg+=`الراتب المتوقع: ${answers.salary}\n`;
+
+const inquiry=document.getElementById("inquiry").value;
+if(inquiry){
+msg+=`\nاستفساري:\n${inquiry}\n`;
+}
+
+msg+="\nأتمنى تأكيد الإجراءات، وأنا جاد ومستعد للبدء.";
+
+return encodeURIComponent(msg);
+}
+
+function sendWhatsApp(){
+const url=`https://wa.me/${WHATSAPP_NUMBER}?text=${buildMessage()}`;
+window.open(url,"_blank");
+}
+
+function directWhatsApp(){
+const inquiry=document.getElementById("inquiry").value;
+let msg="مرحبًا، أريد الاستفسار أكثر عن تفاصيل فرصة العمل.";
+if(inquiry){
+msg+="\n\nاستفساري:\n"+inquiry;
+}
+window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,"_blank");
+}
+
+renderStep();
+</script>
+</body>
+</html>
