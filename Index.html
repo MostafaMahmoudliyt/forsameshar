@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>فرصة مشوار</title>
 
-<!-- Google Font -->
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 
 <style>
@@ -15,7 +14,6 @@
   --accent:#2563eb;
   --light:#f8fafc;
   --border:#e2e8f0;
-  --success:#16a34a;
 }
 
 *{
@@ -51,8 +49,6 @@ body{
   padding:28px 22px;
   border-radius:22px;
   box-shadow:0 10px 30px rgba(0,0,0,.05);
-  position:relative;
-  overflow:hidden;
 }
 
 .progress{
@@ -125,7 +121,6 @@ input,textarea{
   to{opacity:1; transform:translateX(0);}
 }
 
-/* FAQ */
 .faq-item{
   border-bottom:1px solid var(--border);
 }
@@ -142,12 +137,11 @@ input,textarea{
   transition:max-height .3s ease;
   font-size:14px;
   color:#475569;
-  padding-left:6px;
 }
 
 .faq-item.active .faq-answer{
   max-height:300px;
-  margin-bottom:10px;
+  padding-bottom:10px;
 }
 
 .cta{
@@ -163,7 +157,6 @@ input,textarea{
   border:none;
   font-size:15px;
   cursor:pointer;
-  transition:.2s;
 }
 
 .primary-btn{
@@ -175,18 +168,11 @@ input,textarea{
   background:white;
   border:1px solid var(--border);
 }
-
-.primary-btn:hover{
-  background:#1d4ed8;
-}
-
-.secondary-btn:hover{
-  border-color:var(--accent);
-}
 </style>
 </head>
 
 <body>
+
 <div class="container">
 <div class="brand">فرصة مشوار</div>
 <div class="card fade" id="app"></div>
@@ -243,8 +229,10 @@ let html=`
 <div class="progress">
 <div class="progress-bar" style="width:${((currentStep)/steps.length)*100}%"></div>
 </div>
+
 <div class="question">${step.question}</div>
 <div class="reason">${step.reason}</div>
+
 <div class="options">
 `;
 
@@ -252,10 +240,10 @@ step.options.forEach(opt=>{
 html+=`<button class="option-btn" onclick="selectOption('${opt}')">${opt}</button>`;
 });
 
-html+="</div>";
+html+=`</div>`;
 app.innerHTML=html;
 
-} else {
+}else{
 renderFinal();
 }
 }
@@ -271,6 +259,7 @@ document.querySelector(".options").innerHTML+=`
 <button class="option-btn" onclick="saveExperience()">متابعة</button>`;
 return;
 }
+
 if(value==="لا يوجد خبرة"){
 document.querySelector(".options").innerHTML=`
 <button class="option-btn" onclick="chooseJob('مطاعم و محلات')">مطاعم و محلات</button>
@@ -318,7 +307,7 @@ app.innerHTML=`
 
 <div style="margin-top:20px">
 <input id="inquiry" placeholder="ادخل استفسارك (اختياري)">
-<div style="margin-top:10px; font-size:14px; color:#64748b;">
+<div style="margin-top:10px;font-size:14px;color:#64748b;">
 تواصل مع فريقنا مباشرة عبر واتساب وسنرد عليك بأسرع وقت.
 </div>
 </div>
@@ -330,17 +319,19 @@ ${faqItem("من يوفر الشغل؟","نحن نوفره بأنفسنا.")}
 ${faqItem("متوسط الرواتب؟","بين 500 و900 دولار.")}
 ${faqItem("الأكل والسكن؟","أحيانًا توفر الشركة أحدهما أو الاثنين.")}
 ${faqItem("ساعات العمل؟","من 8 إلى 10 ساعات.")}
-${faqItem("التكلفة تشمل:","التأشيرة، تذاكر الطيران، استقبال مطار، سكن أسبوع مجاني، توفير وظيفة، سكن دائم قريب من العمل.")}
-${faqItem("الأوراق المطلوبة:","جواز سفر ساري، صور شخصية.")}
-${faqItem("طريقة الدفع:","يوجد خياران للدفع: مقدم حجز، أو من خلال شركة ضمان حتى الوصول. لا يتوفر نظام الدفع نصف الآن ونصف بعد العمل.")}
-${faqItem("اللغة:","ليست مطلوبة.")}
-${faqItem("موقع الشركة:","اسطنبول وكفر الشيخ.")}
+${faqItem("التكلفة تشمل","التأشيرة، تذاكر الطيران، استقبال مطار، سكن أسبوع مجاني، توفير وظيفة، سكن دائم قريب من العمل.")}
+${faqItem("الأوراق المطلوبة","جواز سفر ساري، صور شخصية.")}
+${faqItem("طريقة الدفع","يوجد خياران للدفع: مقدم حجز، أو من خلال شركة ضمان حتى الوصول.")}
+${faqItem("اللغة","ليست مطلوبة.")}
+${faqItem("موقع الشركة","اسطنبول وكفر الشيخ.")}
 ${faqItem("هل السفر مضمون؟","نعم بضمان.")}
 ${faqItem("هل يمكن تغيير الوظيفة؟","نعم حسب الاتفاق.")}
-${faqItem("وقت الوصول للعمل:","حوالي 3 إلى 4 أسابيع بعد اكتمال الأوراق.")}
+${faqItem("وقت الوصول للعمل","حوالي 3 إلى 4 أسابيع بعد اكتمال الأوراق.")}
 </div>
 
-<div style="margin-top:20px;font-weight:700">هل فهمت جميع التفاصيل؟</div>
+<div style="margin-top:18px;font-size:14px;color:#64748b;text-align:center;">
+سيتم تحويلك بعد قراءة الأسئلة الشائعة
+</div>
 
 <div class="cta">
 <button class="primary-btn" onclick="sendWhatsApp()">نعم فهمت</button>
@@ -348,18 +339,20 @@ ${faqItem("وقت الوصول للعمل:","حوالي 3 إلى 4 أسابيع 
 </div>
 `;
 
-document.querySelectorAll(".faq-question").forEach(item=>{
-item.addEventListener("click",function(){
+document.querySelectorAll(".faq-question").forEach(el=>{
+el.onclick=function(){
 this.parentElement.classList.toggle("active");
-});
+};
 });
 }
 
 function faqItem(q,a){
-return `<div class="faq-item">
+return `
+<div class="faq-item">
 <div class="faq-question">${q}</div>
 <div class="faq-answer">${a}</div>
-</div>`;
+</div>
+`;
 }
 
 function buildMessage(){
@@ -373,7 +366,7 @@ msg+=`تفاصيل الخبرة: ${answers.expDetails}\n`;
 }
 
 if(answers.jobType){
-msg+=`مجال العمل المطلوب: ${answers.jobType}\n`;
+msg+=`مجال العمل: ${answers.jobType}\n`;
 }
 
 msg+=`جواز السفر: ${answers.passport}\n`;
@@ -382,7 +375,7 @@ msg+=`الراتب المتوقع: ${answers.salary}\n`;
 
 const inquiry=document.getElementById("inquiry").value;
 if(inquiry){
-msg+=`\nاستفساري:\n${inquiry}\n`;
+msg+=`\nاستفسار:\n${inquiry}\n`;
 }
 
 msg+="\nأتمنى تأكيد الإجراءات، وأنا جاد ومستعد للبدء.";
@@ -391,21 +384,23 @@ return encodeURIComponent(msg);
 }
 
 function sendWhatsApp(){
-const url=`https://wa.me/${WHATSAPP_NUMBER}?text=${buildMessage()}`;
-window.open(url,"_blank");
+window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${buildMessage()}`,"_blank");
 }
 
 function directWhatsApp(){
 const inquiry=document.getElementById("inquiry").value;
+
 let msg="مرحبًا، أريد الاستفسار أكثر عن تفاصيل فرصة العمل.";
+
 if(inquiry){
 msg+="\n\nاستفساري:\n"+inquiry;
 }
+
 window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,"_blank");
 }
 
 renderStep();
 </script>
-</body>
 
+</body>
 </html>
