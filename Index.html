@@ -49,6 +49,8 @@ body{
   padding:28px 22px;
   border-radius:22px;
   box-shadow:0 10px 30px rgba(0,0,0,.05);
+  position:relative;
+  overflow:hidden;
 }
 
 .progress{
@@ -121,6 +123,7 @@ input,textarea{
   to{opacity:1; transform:translateX(0);}
 }
 
+/* FAQ */
 .faq-item{
   border-bottom:1px solid var(--border);
 }
@@ -137,11 +140,12 @@ input,textarea{
   transition:max-height .3s ease;
   font-size:14px;
   color:#475569;
+  padding-left:6px;
 }
 
 .faq-item.active .faq-answer{
   max-height:300px;
-  padding-bottom:10px;
+  margin-bottom:10px;
 }
 
 .cta{
@@ -157,6 +161,7 @@ input,textarea{
   border:none;
   font-size:15px;
   cursor:pointer;
+  transition:.2s;
 }
 
 .primary-btn{
@@ -167,6 +172,22 @@ input,textarea{
 .secondary-btn{
   background:white;
   border:1px solid var(--border);
+}
+
+.primary-btn:hover{
+  background:#1d4ed8;
+}
+
+.secondary-btn:hover{
+  border-color:var(--accent);
+}
+
+.notice-text{
+  margin-top:20px;
+  font-size:14px;
+  color:#475569;
+  text-align:center;
+  line-height:1.6;
 }
 </style>
 </head>
@@ -240,7 +261,8 @@ step.options.forEach(opt=>{
 html+=`<button class="option-btn" onclick="selectOption('${opt}')">${opt}</button>`;
 });
 
-html+=`</div>`;
+html+="</div>";
+
 app.innerHTML=html;
 
 }else{
@@ -303,13 +325,15 @@ function renderFinal(){
 const app=document.getElementById("app");
 
 app.innerHTML=`
+
 <div class="question">تواصل معنا عبر واتساب</div>
 
-<div style="margin-top:20px">
+<div style="margin-top:18px">
 <input id="inquiry" placeholder="ادخل استفسارك (اختياري)">
-<div style="margin-top:10px;font-size:14px;color:#64748b;">
-تواصل مع فريقنا مباشرة عبر واتساب وسنرد عليك بأسرع وقت.
 </div>
+
+<div class="notice-text">
+تواصل مع فريقنا بعد قراءة الأسئلة الشائعة للحصول على تفاصيل أكثر حول فرصة العمل المناسبة لك.
 </div>
 
 <div style="margin-top:20px;font-weight:700">❓ الأسئلة الشائعة</div>
@@ -319,19 +343,17 @@ ${faqItem("من يوفر الشغل؟","نحن نوفره بأنفسنا.")}
 ${faqItem("متوسط الرواتب؟","بين 500 و900 دولار.")}
 ${faqItem("الأكل والسكن؟","أحيانًا توفر الشركة أحدهما أو الاثنين.")}
 ${faqItem("ساعات العمل؟","من 8 إلى 10 ساعات.")}
-${faqItem("التكلفة تشمل","التأشيرة، تذاكر الطيران، استقبال مطار، سكن أسبوع مجاني، توفير وظيفة، سكن دائم قريب من العمل.")}
-${faqItem("الأوراق المطلوبة","جواز سفر ساري، صور شخصية.")}
-${faqItem("طريقة الدفع","يوجد خياران للدفع: مقدم حجز، أو من خلال شركة ضمان حتى الوصول.")}
-${faqItem("اللغة","ليست مطلوبة.")}
-${faqItem("موقع الشركة","اسطنبول وكفر الشيخ.")}
+${faqItem("التكلفة تشمل:","التأشيرة، تذاكر الطيران، استقبال مطار، سكن أسبوع مجاني، توفير وظيفة، سكن دائم قريب من العمل.")}
+${faqItem("الأوراق المطلوبة:","جواز سفر ساري، صور شخصية.")}
+${faqItem("طريقة الدفع:","يوجد خياران للدفع: مقدم حجز، أو من خلال شركة ضمان حتى الوصول.")}
+${faqItem("اللغة:","ليست مطلوبة.")}
+${faqItem("موقع الشركة:","اسطنبول وكفر الشيخ.")}
 ${faqItem("هل السفر مضمون؟","نعم بضمان.")}
 ${faqItem("هل يمكن تغيير الوظيفة؟","نعم حسب الاتفاق.")}
-${faqItem("وقت الوصول للعمل","حوالي 3 إلى 4 أسابيع بعد اكتمال الأوراق.")}
+${faqItem("وقت الوصول للعمل:","حوالي 3 إلى 4 أسابيع بعد اكتمال الأوراق.")}
 </div>
 
-<div style="margin-top:18px;font-size:14px;color:#64748b;text-align:center;">
-سيتم تحويلك بعد قراءة الأسئلة الشائعة
-</div>
+<div style="margin-top:20px;font-weight:700">هل فهمت جميع التفاصيل؟</div>
 
 <div class="cta">
 <button class="primary-btn" onclick="sendWhatsApp()">نعم فهمت</button>
@@ -339,24 +361,22 @@ ${faqItem("وقت الوصول للعمل","حوالي 3 إلى 4 أسابيع �
 </div>
 `;
 
-document.querySelectorAll(".faq-question").forEach(el=>{
-el.onclick=function(){
+document.querySelectorAll(".faq-question").forEach(item=>{
+item.addEventListener("click",function(){
 this.parentElement.classList.toggle("active");
-};
+});
 });
 }
 
 function faqItem(q,a){
-return `
-<div class="faq-item">
+return `<div class="faq-item">
 <div class="faq-question">${q}</div>
 <div class="faq-answer">${a}</div>
-</div>
-`;
+</div>`;
 }
 
 function buildMessage(){
-let msg="أهلاً 👋\n\nأنا مهتم بفرصة العمل بالخارج، وهذه بياناتي:\n\n";
+let msg="مرحبًا 👋\n\nأنا مهتم بفرصة العمل بالخارج.\n\n";
 
 msg+=`العمر: ${answers.age}\n`;
 msg+=`الخبرة: ${answers.experience}\n`;
@@ -375,10 +395,10 @@ msg+=`الراتب المتوقع: ${answers.salary}\n`;
 
 const inquiry=document.getElementById("inquiry").value;
 if(inquiry){
-msg+=`\nاستفسار:\n${inquiry}\n`;
+msg+=`\nالاستفسار:\n${inquiry}\n`;
 }
 
-msg+="\nأتمنى تأكيد الإجراءات، وأنا جاد ومستعد للبدء.";
+msg+="\nأرجو التواصل لتأكيد الجدية.";
 
 return encodeURIComponent(msg);
 }
@@ -388,12 +408,11 @@ window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${buildMessage()}`,"_blank");
 }
 
 function directWhatsApp(){
-const inquiry=document.getElementById("inquiry").value;
+let inquiry=document.getElementById("inquiry").value;
 
-let msg="مرحبًا، أريد الاستفسار أكثر عن تفاصيل فرصة العمل.";
-
+let msg="مرحبًا، أريد الاستفسار أكثر عن فرصة العمل.";
 if(inquiry){
-msg+="\n\nاستفساري:\n"+inquiry;
+msg+="\n\n"+inquiry;
 }
 
 window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(msg)}`,"_blank");
